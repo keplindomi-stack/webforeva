@@ -51,9 +51,7 @@
 
   .welcome-card {
     position: relative;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 2px solid rgba(255, 255, 255, 0.9);
     border-radius: 32px;
     padding: 50px 40px;
@@ -88,12 +86,13 @@
     color: #fff; font-size: 16px; font-weight: 600;
     font-family: 'Quicksand', sans-serif; cursor: pointer;
     box-shadow: 0 10px 25px rgba(232, 116, 155, 0.5);
-    transition: all 0.3s ease; position: relative; overflow: hidden; z-index: 20;
+    transition: transform 0.3s ease; position: relative; overflow: hidden; z-index: 20;
   }
   #startBtn::after {
     content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
     background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
     transform: rotate(45deg); animation: shine 3s infinite;
+    pointer-events: none;
   }
   @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
   #startBtn:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(232, 116, 155, 0.7); }
@@ -214,7 +213,7 @@
     <div class="heart-seal">♡</div>
     <h2>sebuah pesan kecil</h2>
     <p>khusus buat kamu yang paling cantik</p>
-    <button id="startBtn">buka pesannya</button>
+    <button id="startBtn" onclick="openMessage()">buka pesannya</button>
   </div>
 </div>
 
@@ -308,10 +307,43 @@ hari ini besok dan seterusnya</p>
     "https://picturetolink.com/i/LuZJmGEWFT.png"
   ];
 
+  let i = 0;
+  function ketikMulai() {
+    const teksKetik = "kamu yang paling cantik dan paling aku sayang";
+    const elKetik = document.getElementById('ketik');
+    if (i < teksKetik.length) {
+      elKetik.textContent += teksKetik.charAt(i);
+      i++;
+      setTimeout(ketikMulai, 60);
+    }
+  }
+
+  function openMessage() {
+    const welcome = document.getElementById('welcome');
+    welcome.classList.add('zoom-out');
+    
+    const musik = document.getElementById('musik');
+    if (musik && musik.paused) {
+      musik.play().then(() => {
+        document.getElementById('musikBtn').classList.add('main');
+      }).catch(e => console.log("Audio diblokir"));
+    }
+    
+    setTimeout(() => {
+      welcome.style.display = 'none';
+      
+      document.getElementById('heroKecil').classList.add('fade-up');
+      document.getElementById('heroH1').classList.add('fade-up');
+      document.getElementById('heroPanah').classList.add('fade-up');
+      document.getElementById('heroPanah').style.animation = "masukBawah 1s 2s ease forwards, naikTurun 2s 3s ease-in-out infinite";
+      document.getElementById('ketik').style.animation = "fadeIn 1s 1s ease forwards";
+      
+      setTimeout(ketikMulai, 800);
+    }, 1000); 
+  }
+
   document.addEventListener("DOMContentLoaded", function() {
     
-    const welcome = document.getElementById('welcome');
-    const startBtn = document.getElementById('startBtn');
     const musik = document.getElementById('musik');
     const musikBtn = document.getElementById('musikBtn');
     
@@ -320,32 +352,17 @@ hari ini besok dan seterusnya</p>
       musik.volume = 0.4;
     }
 
-    startBtn.addEventListener('click', () => {
-      welcome.classList.add('zoom-out');
-      
-      if (musik) {
-        musik.play().then(() => {
-          musikBtn.classList.add('main');
-        }).catch(e => console.log("Audio diblokir"));
-      }
-      
-      setTimeout(() => {
-        welcome.style.display = 'none';
-        
-        document.getElementById('heroKecil').classList.add('fade-up');
-        document.getElementById('heroH1').classList.add('fade-up');
-        document.getElementById('heroPanah').classList.add('fade-up');
-        document.getElementById('heroPanah').style.animation = "masukBawah 1s 2s ease forwards, naikTurun 2s 3s ease-in-out infinite";
-        document.getElementById('ketik').style.animation = "fadeIn 1s 1s ease forwards";
-        
-        setTimeout(ketikMulai, 800);
-      }, 1000); 
-    });
-
     musikBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (musik.paused) { musik.play(); musikBtn.classList.add('main'); musikBtn.textContent = '🔊'; } 
-      else { musik.pause(); musikBtn.classList.remove('main'); musikBtn.textContent = '🔇'; }
+      if (musik.paused) { 
+        musik.play(); 
+        musikBtn.classList.add('main'); 
+        musikBtn.textContent = '🔊'; 
+      } else { 
+        musik.pause(); 
+        musikBtn.classList.remove('main'); 
+        musikBtn.textContent = '🔇'; 
+      }
     });
 
     const galeriEl = document.getElementById('galeri');
@@ -404,17 +421,6 @@ hari ini besok dan seterusnya</p>
       document.querySelectorAll('.foto, .lyric-line, .section-title, .tanda, .akhir, .penutup h2').forEach(el => el.classList.add('muncul'));
     }
 
-    const teksKetik = "kamu yang paling cantik dan paling aku sayang";
-    const elKetik = document.getElementById('ketik');
-    let i = 0;
-    function ketikMulai() {
-      if (i < teksKetik.length) {
-        elKetik.textContent += teksKetik.charAt(i);
-        i++;
-        setTimeout(ketikMulai, 60);
-      }
-    }
-
     const canvas = document.getElementById('fxCanvas');
     if (canvas) {
       const ctx = canvas.getContext('2d');
@@ -465,4 +471,4 @@ hari ini besok dan seterusnya</p>
           drawHeartShape(h.size); ctx.fillStyle = `rgba(232, 116, 155, ${h.op})`; ctx.fill(); ctx.restore();
         }
 
-        for (let j = sparkles.length - 1; j >= 0; j-
+        for (let j = sparkles.length - 1; j >= 0; j
