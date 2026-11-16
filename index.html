@@ -94,7 +94,7 @@
     font-weight: 300;
     letter-spacing: -1.5px;
     line-height: 1.1;
-    color: #c25a7e; /* Warna solid, aman */
+    color: #c25a7e;
     opacity: 0;
     animation: masukBawah 1.2s .5s cubic-bezier(.2,.8,.2,1) forwards;
   }
@@ -161,11 +161,7 @@
     color: #d18aa1;
     text-transform: lowercase;
     margin-bottom: 50px;
-    opacity: 0;
-    transform: scale(.8);
-    transition: opacity .8s ease, transform .8s cubic-bezier(.34,1.56,.64,1);
   }
-  .section-title.muncul { opacity: 1; transform: scale(1); }
 
   /* GALERI */
   .galeri {
@@ -183,23 +179,17 @@
     border: 4px solid #e8749b;
     box-shadow: 0 0 0 2px #ffffff, 0 10px 30px rgba(209, 107, 138, .22);
     cursor: pointer;
-    
-    opacity: 0;
-    transform: translateY(50px) scale(.9) rotateX(10deg);
-    transition: opacity .8s cubic-bezier(.2,.8,.2,1),
-                transform .8s cubic-bezier(.2,.8,.2,1),
-                border-color .4s ease,
-                box-shadow .4s ease;
-    will-change: transform;
   }
+  
+  /* Animasi foto muncul */
   .foto.muncul {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotateX(0);
+    animation: munculFoto 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
-  .foto:hover {
-    border-color: #d15a7e;
-    box-shadow: 0 0 0 2px #ffffff, 0 20px 45px rgba(209, 107, 138, .45);
+  @keyframes munculFoto {
+    0% { opacity: 0; transform: translateY(40px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
+
   .foto img {
     width: 100%;
     height: 100%;
@@ -208,16 +198,6 @@
     transition: transform .6s cubic-bezier(.2,.8,.2,1);
   }
   .foto:hover img { transform: scale(1.08); }
-  .foto::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 60%, rgba(200, 90, 126, .25));
-    opacity: 0;
-    transition: opacity .4s ease;
-    pointer-events: none;
-  }
-  .foto:hover::after { opacity: 1; }
   
   .foto.kosong img { display: none; }
   .foto.kosong::before {
@@ -261,13 +241,17 @@
     letter-spacing: .3px;
     margin-bottom: 24px;
     white-space: pre-line;
-    
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity .9s cubic-bezier(.2,.8,.2,1),
-                transform .9s cubic-bezier(.2,.8,.2,1);
   }
-  .surat-wrap p.muncul { opacity: 1; transform: translateY(0); }
+  
+  /* Animasi teks surat muncul */
+  .surat-wrap p.muncul {
+    animation: munculTeks 0.8s ease forwards;
+  }
+  @keyframes munculTeks {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
   .surat-wrap p:last-of-type { margin-bottom: 0; }
   
   .tanda {
@@ -276,21 +260,14 @@
     font-size: 22px;
     letter-spacing: 15px;
     margin: 40px 0 30px;
-    opacity: 0;
-    transform: scale(.5);
-    transition: all .8s cubic-bezier(.34,1.56,.64,1);
   }
-  .tanda.muncul { opacity: 1; transform: scale(1); }
   
   .akhir {
     text-align: right;
     font-style: italic;
     color: #c994a5;
     font-size: 15px;
-    opacity: 0;
-    transition: opacity 1s ease;
   }
-  .akhir.muncul { opacity: 1; }
 
   /* PENUTUP */
   .penutup {
@@ -304,11 +281,7 @@
     font-weight: 300;
     letter-spacing: -.5px;
     color: #c25a7e;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s cubic-bezier(.2,.8,.2,1);
   }
-  .penutup h2.muncul { opacity: 1; transform: translateY(0); }
   
   .penutup .jantung-besar {
     display: inline-block;
@@ -423,97 +396,82 @@ hari ini besok dan seterusnya</p>
   ];
 
   // ==========================================
-  // 2. LOGIKA ANIMASI SCROLL (DENGAN SAFETY NET)
+  // 2. SEMUA LOGIKA JALAN DI SINI
   // ==========================================
   document.addEventListener("DOMContentLoaded", function() {
     
-    // Render Foto ke layar
+    // A. Render Foto ke Layar
     const galeriEl = document.getElementById('galeri');
-    FOTOS.forEach((url, i) => {
-      const fig = document.createElement('figure');
-      fig.className = 'foto';
-      const img = document.createElement('img');
-      img.alt = `foto ${i + 1}`;
-      if (url) {
+    if (galeriEl) {
+      FOTOS.forEach((url) => {
+        const fig = document.createElement('figure');
+        fig.className = 'foto';
+        const img = document.createElement('img');
         img.src = url;
+        // Jika link foto error/mati, munculin emot hati
         img.onerror = () => fig.classList.add('kosong');
-      } else {
-        fig.classList.add('kosong');
-      }
-      fig.appendChild(img);
-      galeriEl.appendChild(fig);
-    });
+        fig.appendChild(img);
+        galeriEl.appendChild(fig);
+      });
+    }
 
-    const fotos = document.querySelectorAll('.foto');
-    const paragrafSurat = document.querySelectorAll('.surat-wrap p');
-    const texts = document.querySelectorAll('.section-title, .tanda, .akhir, .penutup h2');
-
-    // Fungsi Animasi Scroll (Intersection Observer)
+    // B. Animasi Scroll (Hanya mempercantik, TIDAK menyembunyikan konten secara permanen)
+    const elemenAnimasi = document.querySelectorAll('.foto, .surat-wrap p, .section-title, .tanda, .akhir, .penutup h2');
+    
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const el = entry.target;
-            // Kasih jeda biar munculnya gantian
-            const delay = el.classList.contains('foto') ? [...fotos].indexOf(el) * 100 : 0;
-            setTimeout(() => el.classList.add('muncul'), delay);
-            observer.unobserve(el);
+            entry.target.classList.add('muncul');
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.1 });
-
-      fotos.forEach(f => observer.observe(f));
-      paragrafSurat.forEach(p => observer.observe(p));
-      texts.forEach(t => observer.observe(t));
+      
+      elemenAnimasi.forEach(el => observer.observe(el));
     } else {
-      // Kalau browser ga support, langsung munculin semua
-      document.querySelectorAll('.foto, .surat-wrap p, .section-title, .tanda, .akhir, .penutup h2').forEach(el => {
-        el.classList.add('muncul');
-      });
+      // Jika browser ga support, langsung munculin
+      elemenAnimasi.forEach(el => el.classList.add('muncul'));
     }
 
-    // ★★★ SAFETY NET ★★★
-    // Kalau setelah 2.5 detik masih ada yang ga muncul (karena script error/dll), 
-    // paksa munculin semuanya biar ga blank!
+    // PENGAMAN: Paksa muncul semua setelah 1.5 detik (kalau scroll gagal)
     setTimeout(() => {
-      document.querySelectorAll('.foto, .surat-wrap p, .section-title, .tanda, .akhir, .penutup h2').forEach(el => {
-        if (!el.classList.contains('muncul')) el.classList.add('muncul');
-      });
-    }, 2500);
+      elemenAnimasi.forEach(el => el.classList.add('muncul'));
+    }, 1500);
 
-    // ==========================================
-    // 3. TYPEWRITER EFFECT (Efek ngetik)
-    // ==========================================
-    const teksKetik = "kamu yang paling cantik dan paling aku sayang";
+    // C. Efek Ngetik
     const elKetik = document.getElementById('ketik');
-    let i = 0;
-    function ketikHuruf() {
-      if (i < teksKetik.length) {
-        elKetik.textContent += teksKetik.charAt(i);
-        i++;
-        setTimeout(ketikHuruf, 55 + Math.random() * 40);
+    if (elKetik) {
+      const teks = "kamu yang paling cantik dan paling aku sayang";
+      let i = 0;
+      function ketik() {
+        if (i < teks.length) {
+          elKetik.textContent += teks.charAt(i);
+          i++;
+          setTimeout(ketik, 50);
+        }
       }
+      setTimeout(ketik, 1500);
     }
-    setTimeout(ketikHuruf, 1500);
 
-    // ==========================================
-    // 4. MUSIK
-    // ==========================================
+    // D. Musik
     const musik = document.getElementById('musik');
     const musikBtn = document.getElementById('musikBtn');
-    musik.volume = 0.35;
-
-    if (MUSIC_URL) {
+    
+    if (musik && musikBtn && MUSIC_URL) {
       musik.src = MUSIC_URL;
+      musik.volume = 0.35;
 
-      const playMusik = () => musik.play().then(() => {
-        musikBtn.classList.add('main');
-        musikBtn.classList.remove('panggil');
-        musikBtn.textContent = '🔊';
-      }).catch(() => {
-        musikBtn.classList.add('panggil');
-        musikBtn.textContent = '🎵';
-      });
+      const playMusik = () => {
+        musik.play().then(() => {
+          musikBtn.classList.add('main');
+          musikBtn.classList.remove('panggil');
+          musikBtn.textContent = '🔊';
+        }).catch(() => {
+          musikBtn.classList.add('panggil');
+          musikBtn.textContent = '🎵';
+        });
+      };
 
       playMusik();
 
@@ -527,118 +485,65 @@ hari ini besok dan seterusnya</p>
         }
       });
 
-      // Coba play pas layar disentuh/diklik
-      const cobaSekali = () => {
+      document.body.addEventListener('click', () => {
         if (musik.paused) playMusik();
-        document.body.removeEventListener('click', cobaSekali);
-      };
-      document.body.addEventListener('click', cobaSekali);
-    } else {
-      musikBtn.style.display = 'none';
+      }, { once: true });
     }
 
-    // ==========================================
-    // 5. ANIMASI CANVAS (Hati & Confetti)
-    // ==========================================
+    // E. Canvas Animasi Hati
     const canvas = document.getElementById('fxCanvas');
-    const ctx = canvas.getContext('2d');
-    let W, H;
-    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    resize();
-    window.addEventListener('resize', resize);
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let W, H;
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
 
-    const hatiList = [];
-    const confettiList = [];
-
-    function spawnHeart() {
-      hatiList.push({
-        x: Math.random() * W, y: H + 20,
-        size: 6 + Math.random() * 12,
-        speed: 0.4 + Math.random() * 1,
-        drift: (Math.random() - 0.5) * 0.7,
-        op: 0.2 + Math.random() * 0.35,
-        rot: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.02,
-        fase: Math.random() * Math.PI * 2
-      });
-    }
-    for (let i = 0; i < 18; i++) { spawnHeart(); hatiList[i].y = Math.random() * H; }
-
-    function drawHeartShape(size) {
-      ctx.beginPath();
-      ctx.moveTo(0, size * 0.3);
-      ctx.bezierCurveTo(0, 0, -size, 0, -size, size * 0.5);
-      ctx.bezierCurveTo(-size, size, 0, size * 1.2, 0, size * 1.5);
-      ctx.bezierCurveTo(0, size * 1.2, size, size, size, size * 0.5);
-      ctx.bezierCurveTo(size, 0, 0, 0, 0, size * 0.3);
-      ctx.closePath();
-    }
-    function drawHeart(x, y, size, rot, op) {
-      ctx.save();
-      ctx.translate(x, y); ctx.rotate(rot);
-      drawHeartShape(size);
-      ctx.fillStyle = `rgba(232, 116, 155, ${op})`;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function burst(x, y, big) {
-      const n = big ? 32 : 18;
-      for (let i = 0; i < n; i++) {
-        confettiList.push({
-          x, y,
-          vx: (Math.random() - 0.5) * (big ? 16 : 10),
-          vy: -Math.random() * (big ? 16 : 10) - 3,
-          size: 4 + Math.random() * 6,
-          life: 1,
-          gravity: 0.35,
-          color: ['#ff6b9d','#ffb6c9','#ffd7e3','#e8749b','#ffa3c1','#ffe4ec','#ffc2d6'][Math.floor(Math.random()*7)],
-          rot: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.4,
-          shape: Math.random() > 0.5 ? 'heart' : 'circle'
+      const hatiList = [];
+      function spawnHeart() {
+        hatiList.push({
+          x: Math.random() * W, y: H + 20,
+          size: 6 + Math.random() * 12, speed: 0.4 + Math.random() * 1,
+          drift: (Math.random() - 0.5) * 0.7, op: 0.2 + Math.random() * 0.35,
+          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.02,
+          fase: Math.random() * Math.PI * 2
         });
       }
-    }
+      for (let i = 0; i < 18; i++) { spawnHeart(); hatiList[i].y = Math.random() * H; }
 
-    function drawConfetti(c) {
-      ctx.save();
-      ctx.translate(c.x, c.y); ctx.rotate(c.rot);
-      ctx.globalAlpha = Math.max(0, c.life);
-      ctx.fillStyle = c.color;
-      if (c.shape === 'heart') { drawHeartShape(c.size * 0.7); ctx.fill(); }
-      else { ctx.beginPath(); ctx.arc(0, 0, c.size * 0.6, 0, Math.PI * 2); ctx.fill(); }
-      ctx.restore();
-    }
-
-    let waktu = 0;
-    function loop() {
-      ctx.clearRect(0, 0, W, H);
-      waktu += 0.016;
-      if (Math.random() < 0.06 && hatiList.length < 30) spawnHeart();
-      
-      for (let i = hatiList.length - 1; i >= 0; i--) {
-        const h = hatiList[i];
-        h.y -= h.speed;
-        h.x += h.drift + Math.sin(waktu + h.fase) * 0.4;
-        h.rot += h.rotSpeed;
-        if (h.y < -40) { hatiList.splice(i, 1); continue; }
-        drawHeart(h.x, h.y, h.size, h.rot, h.op);
+      function drawHeartShape(size) {
+        ctx.beginPath();
+        ctx.moveTo(0, size * 0.3);
+        ctx.bezierCurveTo(0, 0, -size, 0, -size, size * 0.5);
+        ctx.bezierCurveTo(-size, size, 0, size * 1.2, 0, size * 1.5);
+        ctx.bezierCurveTo(0, size * 1.2, size, size, size, size * 0.5);
+        ctx.bezierCurveTo(size, 0, 0, 0, 0, size * 0.3);
+        ctx.closePath();
       }
-      
-      for (let i = confettiList.length - 1; i >= 0; i--) {
-        const c = confettiList[i];
-        c.vy += c.gravity; c.x += c.vx; c.y += c.vy;
-        c.vx *= 0.99; c.rot += c.rotSpeed; c.life -= 0.012;
-        if (c.life <= 0) { confettiList.splice(i, 1); continue; }
-        drawConfetti(c);
+
+      function loop() {
+        ctx.clearRect(0, 0, W, H);
+        if (Math.random() < 0.06 && hatiList.length < 30) spawnHeart();
+        for (let i = hatiList.length - 1; i >= 0; i--) {
+          const h = hatiList[i];
+          h.y -= h.speed; 
+          h.x += h.drift + Math.sin(Date.now()/1000 + h.fase) * 0.4; 
+          h.rot += h.rotSpeed;
+          if (h.y < -40) { hatiList.splice(i, 1); continue; }
+          
+          ctx.save();
+          ctx.translate(h.x, h.y); ctx.rotate(h.rot);
+          drawHeartShape(h.size);
+          ctx.fillStyle = `rgba(232, 116, 155, ${h.op})`;
+          ctx.fill();
+          ctx.restore();
+        }
+        requestAnimationFrame(loop);
       }
-      requestAnimationFrame(loop);
+      loop();
     }
-    loop();
 
-    // Klik di mana aja = ledakan confetti kecil
-    document.addEventListener('click', (e) => {
-      burst(e.clientX, e.clientY, false);
-    }, true);
-
-    // Klik
+  });
+</script>
+</body>
+</html>
