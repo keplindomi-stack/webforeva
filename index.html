@@ -19,145 +19,154 @@
     min-height: 100vh;
   }
 
+  /* ============ WELCOME SCREEN ============ */
   #welcome {
     position: fixed; inset: 0;
-    background: radial-gradient(circle at top right, #ffd7e3, #ffb6c9, #e8749b);
+    background: linear-gradient(180deg, #ffe4ec, #ffd7e3);
     z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: transform 1s cubic-bezier(0.8, 0, 0.2, 1), opacity 1s ease, visibility 1s;
-    overflow: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
   }
-  
-  #welcome.zoom-out {
-    transform: scale(1.5);
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  .bubble {
-    position: absolute; border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    animation: floatBubble 6s infinite ease-in-out alternate;
-    pointer-events: none;
-  }
-  .bubble:nth-child(1) { width: 100px; height: 100px; top: 10%; left: 10%; animation-delay: 0s; }
-  .bubble:nth-child(2) { width: 150px; height: 150px; bottom: 15%; right: 10%; animation-delay: 1s; }
-  .bubble:nth-child(3) { width: 80px; height: 80px; top: 50%; right: 20%; animation-delay: 2s; }
-  
-  @keyframes floatBubble {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-40px) scale(1.1); }
-  }
-
-  .welcome-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid rgba(255, 255, 255, 1);
-    border-radius: 32px;
-    padding: 50px 40px;
-    text-align: center;
-    box-shadow: 0 24px 60px rgba(232, 116, 155, 0.4);
-    z-index: 10;
-  }
-
-  .heart-seal {
-    font-size: 60px; color: #e8749b; line-height: 1; margin-bottom: 20px;
-    animation: degup 1.5s ease-in-out infinite;
-    text-shadow: 0 4px 15px rgba(232, 116, 155, 0.4);
-  }
-
-  .welcome-card h2 {
+  #welcome.hide { opacity: 0; visibility: hidden; }
+  #welcome h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 26px; color: #c25a7e; margin-bottom: 12px;
+    font-size: 24px; color: #c25a7e; margin-bottom: 20px;
+    letter-spacing: 1px; animation: masukBawah 1s ease forwards;
   }
-  .welcome-card p {
-    font-size: 15px; color: #b07a8c; margin-bottom: 30px; font-weight: 500;
-  }
-
   #startBtn {
-    padding: 18px 45px; border-radius: 40px; border: none;
-    background: #c25a7e;
-    color: #fff; font-size: 18px; font-weight: 600;
+    padding: 14px 32px; border-radius: 30px; border: 2px solid #e8749b;
+    background: transparent; color: #e8749b; font-size: 16px; font-weight: 600;
     font-family: 'Quicksand', sans-serif; cursor: pointer;
-    box-shadow: 0 10px 25px rgba(194, 90, 126, 0.5);
-    position: relative; 
-    z-index: 999;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease; animation: degupKecil 2s infinite;
   }
-  
-  #startBtn:active {
-    background: #a84a6b;
-  }
+  #startBtn:hover { background: #e8749b; color: #fff; }
 
+  /* ============ CANVAS & DEKORASI ============ */
   #fxCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-  
   .dekorasi { position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
   .dekorasi span {
-    position: absolute; font-size: 24px; animation: goyang var(--d, 5s) ease-in-out infinite;
-    animation-delay: var(--delay, 0s); opacity: .7; filter: drop-shadow(0 2px 6px rgba(232, 116, 155, .3));
+    position: absolute; font-size: 24px;
+    animation: goyang var(--d, 5s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s); opacity: .7;
+    filter: drop-shadow(0 2px 6px rgba(232, 116, 155, .3));
   }
   @keyframes goyang {
     0%, 100% { transform: translateY(0) rotate(-10deg); }
     50%      { transform: translateY(-20px) rotate(10deg); }
   }
 
+  /* ============ TOMBOL MUSIK ============ */
   .musik-btn {
     position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
     border-radius: 50%; border: none; background: linear-gradient(135deg, #ffb6c9, #e8749b);
     color: #fff; font-size: 24px; cursor: pointer; z-index: 100;
-    box-shadow: 0 8px 24px rgba(232, 116, 155, .5); transition: transform .3s ease; display: none;
+    box-shadow: 0 8px 24px rgba(232, 116, 155, .5); transition: transform .3s ease;
+    display: none;
   }
   .musik-btn:hover { transform: scale(1.1); }
   .musik-btn.main { animation: degupKecil 2s ease-in-out infinite; display: block; }
   @keyframes degupKecil { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
+  /* ============ HERO SECTION ============ */
   .hero {
     position: relative; z-index: 3; min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 40px 20px; text-align: center;
   }
-  .hero .kecil { font-size: 14px; letter-spacing: 6px; color: #d18aa1; text-transform: lowercase; margin-bottom: 24px; opacity: 0; }
-  .hero h1 {
-    font-family: 'Playfair Display', serif; font-size: clamp(40px, 10vw, 85px); font-weight: 600;
-    letter-spacing: -1px; line-height: 1.1; color: #c25a7e; opacity: 0;
+  .hero .kecil {
+    font-size: 14px; letter-spacing: 6px; color: #d18aa1; text-transform: lowercase;
+    margin-bottom: 24px; opacity: 0; animation: masukBawah 1s .3s ease forwards;
   }
-  .hero h1 .jantung { display: inline-block; color: #e8749b; margin-left: 10px; animation: degup 1.4s ease-in-out infinite; vertical-align: middle; }
+  
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 10vw, 85px); font-weight: 600;
+    letter-spacing: -1px; line-height: 1.1; color: #c25a7e;
+    opacity: 0; animation: masukBawah 1.2s .5s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+
+  .hero h1 .jantung {
+    display: inline-block; color: #e8749b; margin-left: 10px;
+    animation: degup 1.4s ease-in-out infinite; vertical-align: middle;
+  }
   @keyframes degup { 0%, 100% { transform: scale(1); } 25% { transform: scale(1.2); } 50% { transform: scale(1); } 75% { transform: scale(1.15); } }
   
-  .hero .ketik { margin-top: 30px; font-size: 16px; font-weight: 500; letter-spacing: 1px; color: #b07a8c; min-height: 24px; opacity: 0; }
+  .hero .ketik {
+    margin-top: 30px; font-size: 16px; font-weight: 500; letter-spacing: 1px;
+    color: #b07a8c; min-height: 24px; opacity: 0; animation: fadeIn 1s 1.8s ease forwards;
+  }
   .hero .ketik::after { content: "|"; color: #e8749b; margin-left: 2px; animation: kedip .8s step-end infinite; }
   @keyframes kedip { 50% { opacity: 0; } }
-  .hero .panah { margin-top: 60px; font-size: 28px; color: #e08aa6; opacity: 0; }
-  @keyframes naikTurun { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
-
-  .fade-up { animation: masukBawah 1s ease forwards; }
-  @keyframes masukBawah { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-  .section { position: relative; z-index: 3; max-width: 860px; margin: 0 auto; padding: 80px 20px; }
-  .section-title { font-family: 'Playfair Display', serif; text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 4px; color: #d18aa1; margin-bottom: 50px; }
-
-  .galeri { display: flex; flex-direction: column; align-items: center; gap: 40px; }
-  .foto {
-    position: relative; width: 85%; max-width: 320px; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden;
-    background: linear-gradient(135deg, #ffe7ee, #ffd7e3); border: 6px solid #ffffff;
-    box-shadow: 0 15px 35px rgba(209, 107, 138, .25); cursor: pointer;
-    opacity: 0; transform: translateY(80px) scale(0.8) rotate(0deg);
-    transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);
+  
+  .hero .panah {
+    margin-top: 60px; font-size: 28px; color: #e08aa6; opacity: 0;
+    animation: masukBawah 1s 3s ease forwards, naikTurun 2s 4s ease-in-out infinite;
   }
+  @keyframes naikTurun { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
+  @keyframes masukBawah { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ============ SECTION UMUM ============ */
+  .section { position: relative; z-index: 3; max-width: 860px; margin: 0 auto; padding: 80px 20px; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 4px;
+    color: #d18aa1; text-transform: lowercase; margin-bottom: 50px;
+  }
+
+  /* ============ GALERI (Animasi 1 per 1) ============ */
+  .galeri {
+    display: flex; flex-direction: column; align-items: center; gap: 40px;
+  }
+  
+  /* Bingkai foto ala polaroid yang agak miring */
+  .foto {
+    position: relative; 
+    width: 85%; max-width: 320px; 
+    aspect-ratio: 3 / 4; 
+    border-radius: 20px; overflow: hidden;
+    background: linear-gradient(135deg, #ffe7ee, #ffd7e3);
+    border: 6px solid #ffffff; /* Bingkai putih tebal */
+    box-shadow: 0 15px 35px rgba(209, 107, 138, .25);
+    cursor: pointer; 
+    
+    /* Kondisi awal sebelum muncul */
+    opacity: 0; 
+    transform: translateY(80px) scale(0.8) rotate(0deg);
+    transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1), border-color 0.4s ease;
+  }
+  
+  /* Ganjil/genap dibikin miring biar lucu */
   .foto:nth-child(odd) { transform: translateY(80px) scale(0.8) rotate(-4deg); }
   .foto:nth-child(even) { transform: translateY(80px) scale(0.8) rotate(4deg); }
-  .foto.muncul { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-  .foto:hover { border-color: #ffd7e3; box-shadow: 0 20px 45px rgba(209, 107, 138, .4); }
-  .foto:hover img { transform: scale(1.08); }
-  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
-  .foto.kosong img { display: none; }
-  .foto.kosong::before { content: "♡"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 50px; color: #f3a4bb; animation: degup 2s ease-in-out infinite; }
 
+  /* Class pas muncul di scroll */
+  .foto.muncul { 
+    opacity: 1; 
+    transform: translateY(0) scale(1) rotate(0deg); 
+  }
+  
+  /* Efek pas di hover */
+  .foto:hover { 
+    border-color: #ffd7e3; 
+    box-shadow: 0 20px 45px rgba(209, 107, 138, .4); 
+  }
+  .foto:hover img { transform: scale(1.08); }
+  
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  
+  .foto.kosong img { display: none; }
+  .foto.kosong::before {
+    content: "♡"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 50px; color: #f3a4bb; animation: degup 2s ease-in-out infinite;
+  }
+
+  /* ============ SURAT (Animasi Lirik) ============ */
   .surat-wrap {
-    position: relative; background: rgba(255, 255, 255, .9); backdrop-filter: blur(10px);
-    border: 2px solid rgba(232, 116, 155, .4); border-radius: 32px; padding: 50px 40px;
-    box-shadow: 0 24px 60px rgba(209, 107, 138, .15); overflow: hidden;
+    position: relative; background: rgba(255, 255, 255, .9);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(232, 116, 155, .4); border-radius: 32px;
+    padding: 50px 40px; box-shadow: 0 24px 60px rgba(209, 107, 138, .15); overflow: hidden;
   }
   .surat-wrap::before {
     content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -166,48 +175,65 @@
   }
   @keyframes putar { to { transform: rotate(360deg); } }
   
-  .surat-wrap p { font-size: 17px; line-height: 1.8; letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 500; }
+  .surat-wrap p {
+    font-size: 17px; line-height: 1.8; letter-spacing: 0.5px; margin-bottom: 12px;
+    font-weight: 500;
+  }
   .surat-wrap p:last-of-type { margin-bottom: 0; }
   
+  /* Style buat teks yang bakal dipecah per baris */
   .lyric-line {
-    display: block; opacity: 0; transform: translateY(15px); filter: blur(5px);
+    display: block;
+    opacity: 0;
+    transform: translateY(15px);
+    filter: blur(5px); /* Efek blur awal */
     transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
   }
-  .lyric-line.muncul { opacity: 1; transform: translateY(0); filter: blur(0); }
+  .lyric-line.muncul {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
   
-  .tanda { text-align: center; color: #e08aa6; font-size: 22px; letter-spacing: 15px; margin: 40px 0 30px; opacity: 0; transition: opacity 1s ease; }
+  .tanda {
+    text-align: center; color: #e08aa6; font-size: 22px; letter-spacing: 15px; margin: 40px 0 30px;
+    opacity: 0; transition: opacity 1s ease;
+  }
   .tanda.muncul { opacity: 1; }
-  .akhir { text-align: right; font-style: italic; color: #c994a5; font-size: 15px; opacity: 0; transition: opacity 1s ease; display: block; margin-top: 20px; }
+  
+  .akhir {
+    text-align: right; font-style: italic; color: #c994a5; font-size: 15px;
+    opacity: 0; transition: opacity 1s ease; display: block; margin-top: 20px;
+  }
   .akhir.muncul { opacity: 1; }
 
+  /* ============ PENUTUP ============ */
   .penutup { position: relative; z-index: 3; text-align: center; padding: 100px 20px 120px; }
   .penutup h2 {
-    font-family: 'Playfair Display', serif; font-size: clamp(24px, 6vw, 36px); font-weight: 400; color: #c25a7e;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 6vw, 36px); font-weight: 400; color: #c25a7e;
     opacity: 0; transform: translateY(20px); transition: all 1s cubic-bezier(.2,.8,.2,1);
   }
   .penutup h2.muncul { opacity: 1; transform: translateY(0); }
-  .penutup .jantung-besar { display: inline-block; font-size: 46px; color: #e8749b; margin-top: 24px; animation: degup 1.4s ease-in-out infinite; }
+  
+  .penutup .jantung-besar {
+    display: inline-block; font-size: 46px; color: #e8749b; margin-top: 24px; animation: degup 1.4s ease-in-out infinite;
+  }
 
   @media (max-width: 500px) {
     .surat-wrap { padding: 40px 24px; border-radius: 28px; }
     .surat-wrap p { font-size: 16px; }
     .foto { width: 90%; }
+    .dekorasi span { font-size: 20px; }
   }
 </style>
 </head>
 <body>
 
+<!-- LAYAR PEMBUKA -->
 <div id="welcome">
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  
-  <div class="welcome-card">
-    <div class="heart-seal">♡</div>
-    <h2>sebuah pesan kecil</h2>
-    <p>khusus buat kamu yang paling cantik</p>
-    <button id="startBtn" type="button">buka pesannya</button>
-  </div>
+  <h2>ada pesan buat kamu...</h2>
+  <button id="startBtn">buka ya ♡</button>
 </div>
 
 <canvas id="fxCanvas"></canvas>
@@ -226,11 +252,11 @@
 <button class="musik-btn" id="musikBtn" title="musik">🔊</button>
 <audio id="musik" loop preload="auto"></audio>
 
-<section class="hero" id="hero">
-  <p class="kecil" id="heroKecil">sebuah halaman kecil</p>
-  <h1 id="heroH1">buat kamu <span class="jantung">♡</span></h1>
+<section class="hero">
+  <p class="kecil">sebuah halaman kecil</p>
+  <h1>buat kamu <span class="jantung">♡</span></h1>
   <p class="ketik" id="ketik"></p>
-  <div class="panah" id="heroPanah">↓</div>
+  <div class="panah">↓</div>
 </section>
 
 <section class="section">
@@ -286,6 +312,9 @@ hari ini besok dan seterusnya</p>
 </section>
 
 <script>
+  // ==========================================
+  // 1. DATA FOTO DAN MUSIK (UDAH DITAMBAH)
+  // ==========================================
   const MUSIC_URL = "https://www.image2url.com/r2/default/audio/1794812380265-4f3f66b3-00ad-4339-ac96-b5c1a66e2fc9.mp3";
   const FOTOS = [
     "https://picturetolink.com/i/a8Qzoz6rno.png",
@@ -297,84 +326,39 @@ hari ini besok dan seterusnya</p>
     "https://picturetolink.com/i/tLv2R77x84.png",
     "https://picturetolink.com/i/O8cIN2oFxn.webp",
     "https://picturetolink.com/i/kfrihdtKvm.webp",
-    "https://picturetolink.com/i/LuZJmGEWFT.png"
+    "https://picturetolink.com/i/LuZJmGEWFT.png" /* <-- FOTO BARU */
   ];
-
-  let i = 0;
-  function ketikMulai() {
-    const teksKetik = "kamu yang paling cantik dan paling aku sayang";
-    const elKetik = document.getElementById('ketik');
-    if (i < teksKetik.length) {
-      elKetik.textContent += teksKetik.charAt(i);
-      i++;
-      setTimeout(ketikMulai, 60);
-    }
-  }
-
-  let isOpened = false;
-  function openMessage(e) {
-    if(e) e.preventDefault();
-    if(isOpened) return;
-    isOpened = true;
-
-    const welcome = document.getElementById('welcome');
-    welcome.classList.add('zoom-out');
-    
-    const musik = document.getElementById('musik');
-    if (musik && musik.paused) {
-      musik.play().then(() => {
-        document.getElementById('musikBtn').classList.add('main');
-      }).catch(err => console.log("Audio diblokir"));
-    }
-    
-    setTimeout(() => {
-      welcome.style.display = 'none';
-      
-      document.getElementById('heroKecil').classList.add('fade-up');
-      document.getElementById('heroH1').classList.add('fade-up');
-      document.getElementById('heroPanah').classList.add('fade-up');
-      document.getElementById('heroPanah').style.animation = "masukBawah 1s 2s ease forwards, naikTurun 2s 3s ease-in-out infinite";
-      document.getElementById('ketik').style.animation = "fadeIn 1s 1s ease forwards";
-      
-      setTimeout(ketikMulai, 800);
-    }, 1000); 
-  }
 
   document.addEventListener("DOMContentLoaded", function() {
     
-    const welcomeDiv = document.getElementById('welcome');
+    // --- WELCOME SCREEN & MUSIK ---
+    const welcome = document.getElementById('welcome');
     const startBtn = document.getElementById('startBtn');
     const musik = document.getElementById('musik');
     const musikBtn = document.getElementById('musikBtn');
-    
-    if (startBtn) {
-      startBtn.addEventListener('click', openMessage);
-      startBtn.addEventListener('touchstart', openMessage, {passive: false});
-    }
-    
-    if (welcomeDiv) {
-      welcomeDiv.addEventListener('click', openMessage);
-      welcomeDiv.addEventListener('touchstart', openMessage, {passive: false});
-    }
     
     if (musik && MUSIC_URL) {
       musik.src = MUSIC_URL;
       musik.volume = 0.4;
     }
 
-    musikBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (musik.paused) { 
-        musik.play(); 
-        musikBtn.classList.add('main'); 
-        musikBtn.textContent = '🔊'; 
-      } else { 
-        musik.pause(); 
-        musikBtn.classList.remove('main'); 
-        musikBtn.textContent = '🔇'; 
+    startBtn.addEventListener('click', () => {
+      welcome.classList.add('hide');
+      if (musik) {
+        musik.play().then(() => {
+          musikBtn.classList.add('main');
+        }).catch(e => console.log("Audio diblokir"));
       }
+      setTimeout(ketikMulai, 500);
     });
 
+    musikBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (musik.paused) { musik.play(); musikBtn.classList.add('main'); musikBtn.textContent = '🔊'; } 
+      else { musik.pause(); musikBtn.classList.remove('main'); musikBtn.textContent = '🔇'; }
+    });
+
+    // --- RENDER FOTO ---
     const galeriEl = document.getElementById('galeri');
     if (galeriEl) {
       FOTOS.forEach((url) => {
@@ -388,15 +372,20 @@ hari ini besok dan seterusnya</p>
       });
     }
 
+    // --- PECAH TEKS JADI LIRIK (PER BARIS) ---
     const suratParagraf = document.querySelectorAll('.surat-wrap p');
     suratParagraf.forEach(p => {
-      if(p.classList.contains('akhir')) return; 
+      if(p.classList.contains('akhir')) return; // Skip teks akhir
       const lines = p.innerHTML.trim().split('\n');
       p.innerHTML = lines.map(line => `<span class="lyric-line">${line.trim()}</span>`).join('');
     });
+
     const lyricLines = document.querySelectorAll('.lyric-line');
 
+    // --- ANIMASI SCROLL (1 PER 1) ---
     if ('IntersectionObserver' in window) {
+      
+      // Observer FOTO (Beneran muncul satu per satu pas di-scroll)
       const obsFoto = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -404,9 +393,10 @@ hari ini besok dan seterusnya</p>
             obsFoto.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
+      }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" }); // Muncul saat agak masuk layar
       document.querySelectorAll('.foto').forEach(f => obsFoto.observe(f));
 
+      // Observer LIRIK (Muncul baris demi baris)
       const obsLirik = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -417,6 +407,7 @@ hari ini besok dan seterusnya</p>
       }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
       lyricLines.forEach(l => obsLirik.observe(l));
 
+      // Observer Judul & Penutup
       const obsSisa = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -431,6 +422,21 @@ hari ini besok dan seterusnya</p>
       document.querySelectorAll('.foto, .lyric-line, .section-title, .tanda, .akhir, .penutup h2').forEach(el => el.classList.add('muncul'));
     }
 
+    // --- EFEK KETIK ---
+    const teksKetik = "kamu yang paling cantik dan paling aku sayang";
+    const elKetik = document.getElementById('ketik');
+    let i = 0;
+    function ketikMulai() {
+      if (i < teksKetik.length) {
+        elKetik.textContent += teksKetik.charAt(i);
+        i++;
+        setTimeout(ketikMulai, 60);
+      }
+    }
+
+    // ==========================================
+    // CANVAS EFEK (HATI, CONFETTI, BINTANG KURSOR)
+    // ==========================================
     const canvas = document.getElementById('fxCanvas');
     if (canvas) {
       const ctx = canvas.getContext('2d');
@@ -440,7 +446,7 @@ hari ini besok dan seterusnya</p>
       window.addEventListener('resize', resize);
 
       const hatiList = [];
-      const sparkles = []; 
+      const sparkles = []; // Buat efek kursor
 
       function spawnHeart() {
         hatiList.push({
@@ -453,9 +459,14 @@ hari ini besok dan seterusnya</p>
       }
       for (let j = 0; j < 18; j++) { spawnHeart(); hatiList[j].y = Math.random() * H; }
 
+      // Efek Kursor Bintang
       document.addEventListener('mousemove', (e) => {
-        if (Math.random() > 0.7) { 
-          sparkles.push({ x: e.clientX, y: e.clientY, size: 3 + Math.random() * 4, life: 1, vy: -1 - Math.random() * 2 });
+        if (Math.random() > 0.7) { // Biar ga terlalu penuh
+          sparkles.push({
+            x: e.clientX, y: e.clientY,
+            size: 3 + Math.random() * 4,
+            life: 1, vy: -1 - Math.random() * 2
+          });
         }
       });
 
@@ -472,15 +483,42 @@ hari ini besok dan seterusnya</p>
       function loop() {
         ctx.clearRect(0, 0, W, H);
         
+        // Hati melayang ke atas
         if (Math.random() < 0.06 && hatiList.length < 30) spawnHeart();
         for (let j = hatiList.length - 1; j >= 0; j--) {
           const h = hatiList[j];
-          h.y -= h.speed; h.x += h.drift + Math.sin(Date.now()/1000 + h.fase) * 0.4; h.rot += h.rotSpeed;
+          h.y -= h.speed; 
+          h.x += h.drift + Math.sin(Date.now()/1000 + h.fase) * 0.4; 
+          h.rot += h.rotSpeed;
           if (h.y < -40) { hatiList.splice(j, 1); continue; }
-          ctx.save(); ctx.translate(h.x, h.y); ctx.rotate(h.rot);
-          drawHeartShape(h.size); ctx.fillStyle = `rgba(232, 116, 155, ${h.op})`; ctx.fill(); ctx.restore();
+          
+          ctx.save();
+          ctx.translate(h.x, h.y); ctx.rotate(h.rot);
+          drawHeartShape(h.size);
+          ctx.fillStyle = `rgba(232, 116, 155, ${h.op})`;
+          ctx.fill();
+          ctx.restore();
         }
 
+        // Bintang mengikuti kursor
         for (let j = sparkles.length - 1; j >= 0; j--) {
           const s = sparkles[j];
-   
+          s.y += s.vy;
+          s.life -= 0.02;
+          if (s.life <= 0) { sparkles.splice(j, 1); continue; }
+          
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 182, 201, ${s.life})`; // Warna pink
+          ctx.fill();
+        }
+
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+  });
+</script>
+</body>
+</html>
