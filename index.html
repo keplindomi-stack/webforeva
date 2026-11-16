@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>buat kamu ♡</title>
-<!-- IMPORT FONT DARI GOOGLE -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,7 +12,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    /* Ganti font utama ke Quicksand */
     font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
     background: linear-gradient(180deg, #fff5f8 0%, #ffe4ec 30%, #ffeef3 60%, #fff0f5 100%);
     color: #5a3a45;
@@ -21,7 +19,7 @@
     min-height: 100vh;
   }
 
-  /* ============ WELCOME SCREEN (PEMBUKA MUSIK) ============ */
+  /* ============ WELCOME SCREEN ============ */
   #welcome {
     position: fixed; inset: 0;
     background: linear-gradient(180deg, #ffe4ec, #ffd7e3);
@@ -33,8 +31,7 @@
   #welcome h2 {
     font-family: 'Playfair Display', serif;
     font-size: 24px; color: #c25a7e; margin-bottom: 20px;
-    letter-spacing: 1px;
-    animation: masukBawah 1s ease forwards;
+    letter-spacing: 1px; animation: masukBawah 1s ease forwards;
   }
   #startBtn {
     padding: 14px 32px; border-radius: 30px; border: 2px solid #e8749b;
@@ -64,7 +61,7 @@
     border-radius: 50%; border: none; background: linear-gradient(135deg, #ffb6c9, #e8749b);
     color: #fff; font-size: 24px; cursor: pointer; z-index: 100;
     box-shadow: 0 8px 24px rgba(232, 116, 155, .5); transition: transform .3s ease;
-    display: none; /* Sembunyi dulu sampai welcome screen diklik */
+    display: none;
   }
   .musik-btn:hover { transform: scale(1.1); }
   .musik-btn.main { animation: degupKecil 2s ease-in-out infinite; display: block; }
@@ -115,34 +112,56 @@
     font-family: 'Playfair Display', serif;
     text-align: center; font-size: 16px; font-weight: 400; letter-spacing: 4px;
     color: #d18aa1; text-transform: lowercase; margin-bottom: 50px;
-    opacity: 0; transform: translateY(20px); transition: all 0.8s ease;
   }
-  .section-title.muncul { opacity: 1; transform: translateY(0); }
 
-  /* ============ GALERI (Animasi Bergantian) ============ */
+  /* ============ GALERI (Animasi 1 per 1) ============ */
   .galeri {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px; perspective: 1000px;
+    display: flex; flex-direction: column; align-items: center; gap: 40px;
   }
+  
+  /* Bingkai foto ala polaroid yang agak miring */
   .foto {
-    position: relative; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden;
+    position: relative; 
+    width: 85%; max-width: 320px; 
+    aspect-ratio: 3 / 4; 
+    border-radius: 20px; overflow: hidden;
     background: linear-gradient(135deg, #ffe7ee, #ffd7e3);
-    border: 4px solid #e8749b; box-shadow: 0 0 0 2px #ffffff, 0 10px 30px rgba(209, 107, 138, .22);
-    cursor: pointer; opacity: 0; transform: translateY(40px) scale(0.9);
-    transition: opacity 0.8s cubic-bezier(.2,.8,.2,1), transform 0.8s cubic-bezier(.2,.8,.2,1);
+    border: 6px solid #ffffff; /* Bingkai putih tebal */
+    box-shadow: 0 15px 35px rgba(209, 107, 138, .25);
+    cursor: pointer; 
+    
+    /* Kondisi awal sebelum muncul */
+    opacity: 0; 
+    transform: translateY(80px) scale(0.8) rotate(0deg);
+    transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1), border-color 0.4s ease;
   }
-  .foto.muncul { opacity: 1; transform: translateY(0) scale(1); }
-  .foto:hover { border-color: #d15a7e; box-shadow: 0 0 0 2px #ffffff, 0 20px 45px rgba(209, 107, 138, .45); }
-  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  
+  /* Ganjil/genap dibikin miring biar lucu */
+  .foto:nth-child(odd) { transform: translateY(80px) scale(0.8) rotate(-4deg); }
+  .foto:nth-child(even) { transform: translateY(80px) scale(0.8) rotate(4deg); }
+
+  /* Class pas muncul di scroll */
+  .foto.muncul { 
+    opacity: 1; 
+    transform: translateY(0) scale(1) rotate(0deg); 
+  }
+  
+  /* Efek pas di hover */
+  .foto:hover { 
+    border-color: #ffd7e3; 
+    box-shadow: 0 20px 45px rgba(209, 107, 138, .4); 
+  }
   .foto:hover img { transform: scale(1.08); }
+  
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
   
   .foto.kosong img { display: none; }
   .foto.kosong::before {
     content: "♡"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 42px; color: #f3a4bb; animation: degup 2s ease-in-out infinite;
+    font-size: 50px; color: #f3a4bb; animation: degup 2s ease-in-out infinite;
   }
 
-  /* ============ SURAT (Animasi Bergantian) ============ */
+  /* ============ SURAT (Animasi Lirik) ============ */
   .surat-wrap {
     position: relative; background: rgba(255, 255, 255, .9);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -157,12 +176,24 @@
   @keyframes putar { to { transform: rotate(360deg); } }
   
   .surat-wrap p {
-    font-size: 16px; line-height: 2.1; letter-spacing: .3px; margin-bottom: 24px; white-space: pre-line;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.2,.8,.2,1);
+    font-size: 17px; line-height: 1.8; letter-spacing: 0.5px; margin-bottom: 12px;
+    font-weight: 500;
   }
-  .surat-wrap p.muncul { opacity: 1; transform: translateY(0); }
   .surat-wrap p:last-of-type { margin-bottom: 0; }
+  
+  /* Style buat teks yang bakal dipecah per baris */
+  .lyric-line {
+    display: block;
+    opacity: 0;
+    transform: translateY(15px);
+    filter: blur(5px); /* Efek blur awal */
+    transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
+  }
+  .lyric-line.muncul {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
   
   .tanda {
     text-align: center; color: #e08aa6; font-size: 22px; letter-spacing: 15px; margin: 40px 0 30px;
@@ -172,7 +203,7 @@
   
   .akhir {
     text-align: right; font-style: italic; color: #c994a5; font-size: 15px;
-    opacity: 0; transition: opacity 1s ease;
+    opacity: 0; transition: opacity 1s ease; display: block; margin-top: 20px;
   }
   .akhir.muncul { opacity: 1; }
 
@@ -191,15 +222,15 @@
 
   @media (max-width: 500px) {
     .surat-wrap { padding: 40px 24px; border-radius: 28px; }
-    .surat-wrap p { font-size: 15px; line-height: 2; }
-    .galeri { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .surat-wrap p { font-size: 16px; }
+    .foto { width: 90%; }
     .dekorasi span { font-size: 20px; }
   }
 </style>
 </head>
 <body>
 
-<!-- LAYAR PEMBUKA (Untuk unlock audio browser) -->
+<!-- LAYAR PEMBUKA -->
 <div id="welcome">
   <h2>ada pesan buat kamu...</h2>
   <button id="startBtn">buka ya ♡</button>
@@ -235,7 +266,7 @@
 
 <section class="section">
   <p class="section-title">yang mau aku bilang</p>
-  <div class="surat-wrap">
+  <div class="surat-wrap" id="suratContainer">
     <p>hai sayang</p>
     <p>aku ga tau harus mulai dari mana
 tiap kali aku coba nulis sesuatu buat kamu rasanya selalu kurang
@@ -282,7 +313,7 @@ hari ini besok dan seterusnya</p>
 
 <script>
   // ==========================================
-  // 1. DATA FOTO DAN MUSIK
+  // 1. DATA FOTO DAN MUSIK (UDAH DITAMBAH)
   // ==========================================
   const MUSIC_URL = "https://www.image2url.com/r2/default/audio/1794812380265-4f3f66b3-00ad-4339-ac96-b5c1a66e2fc9.mp3";
   const FOTOS = [
@@ -294,12 +325,13 @@ hari ini besok dan seterusnya</p>
     "https://picturetolink.com/i/Ze3AnmAMQg.png",
     "https://picturetolink.com/i/tLv2R77x84.png",
     "https://picturetolink.com/i/O8cIN2oFxn.webp",
-    "https://picturetolink.com/i/kfrihdtKvm.webp"
+    "https://picturetolink.com/i/kfrihdtKvm.webp",
+    "https://picturetolink.com/i/LuZJmGEWFT.png" /* <-- FOTO BARU */
   ];
 
   document.addEventListener("DOMContentLoaded", function() {
     
-    // --- LOGIKA WELCOME SCREEN & MUSIK AUTOPLAY ---
+    // --- WELCOME SCREEN & MUSIK ---
     const welcome = document.getElementById('welcome');
     const startBtn = document.getElementById('startBtn');
     const musik = document.getElementById('musik');
@@ -312,37 +344,21 @@ hari ini besok dan seterusnya</p>
 
     startBtn.addEventListener('click', () => {
       welcome.classList.add('hide');
-      
-      // Play musik tepat setelah tombol diklik
       if (musik) {
         musik.play().then(() => {
           musikBtn.classList.add('main');
-          musikBtn.textContent = '🔊';
-        }).catch(e => console.log("Audio diblokir browser"));
+        }).catch(e => console.log("Audio diblokir"));
       }
-      
-      // Mulai animasi ngetik setelah layar pembuka hilang
       setTimeout(ketikMulai, 500);
     });
 
-    // Tombol Musik Pause/Play (opsional kalau mau matiin lagu)
     musikBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (musik.paused) {
-        musik.play();
-        musikBtn.classList.add('main');
-        musikBtn.textContent = '🔊';
-      } else {
-        musik.pause();
-        musikBtn.classList.remove('main');
-        musikBtn.textContent = '🔇';
-      }
+      if (musik.paused) { musik.play(); musikBtn.classList.add('main'); musikBtn.textContent = '🔊'; } 
+      else { musik.pause(); musikBtn.classList.remove('main'); musikBtn.textContent = '🔇'; }
     });
 
-
-    // ==========================================
-    // 2. RENDER FOTO KE LAYAR
-    // ==========================================
+    // --- RENDER FOTO ---
     const galeriEl = document.getElementById('galeri');
     if (galeriEl) {
       FOTOS.forEach((url) => {
@@ -356,46 +372,42 @@ hari ini besok dan seterusnya</p>
       });
     }
 
-    // ==========================================
-    // 3. ANIMASI SCROLL BERGANTIAN (STAGGERED)
-    // ==========================================
-    const fotos = document.querySelectorAll('.foto');
+    // --- PECAH TEKS JADI LIRIK (PER BARIS) ---
     const suratParagraf = document.querySelectorAll('.surat-wrap p');
-    const sectionTitles = document.querySelectorAll('.section-title');
-    const elemenPenutup = document.querySelectorAll('.tanda, .akhir, .penutup h2');
+    suratParagraf.forEach(p => {
+      if(p.classList.contains('akhir')) return; // Skip teks akhir
+      const lines = p.innerHTML.trim().split('\n');
+      p.innerHTML = lines.map(line => `<span class="lyric-line">${line.trim()}</span>`).join('');
+    });
 
+    const lyricLines = document.querySelectorAll('.lyric-line');
+
+    // --- ANIMASI SCROLL (1 PER 1) ---
     if ('IntersectionObserver' in window) {
       
-      // Observer untuk FOTO (muncul satu per satu dengan jeda)
+      // Observer FOTO (Beneran muncul satu per satu pas di-scroll)
       const obsFoto = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // Ambil index foto buat nentuin delay (150ms per foto)
-            const idx = [...fotos].indexOf(entry.target);
-            setTimeout(() => {
-              entry.target.classList.add('muncul');
-            }, idx * 150); 
+            entry.target.classList.add('muncul');
             obsFoto.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.1 });
-      fotos.forEach(f => obsFoto.observe(f));
+      }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" }); // Muncul saat agak masuk layar
+      document.querySelectorAll('.foto').forEach(f => obsFoto.observe(f));
 
-      // Observer untuk PARAGRAF SURAT (muncul perlahan per paragraf)
-      const obsSurat = new IntersectionObserver((entries) => {
+      // Observer LIRIK (Muncul baris demi baris)
+      const obsLirik = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const idx = [...suratParagraf].indexOf(entry.target);
-            setTimeout(() => {
-              entry.target.classList.add('muncul');
-            }, idx * 100); // Delay 100ms per paragraf
-            obsSurat.unobserve(entry.target);
+            entry.target.classList.add('muncul');
+            obsLirik.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.1 });
-      suratParagraf.forEach(p => obsSurat.observe(p));
+      }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
+      lyricLines.forEach(l => obsLirik.observe(l));
 
-      // Observer untuk judul & penutup
+      // Observer Judul & Penutup
       const obsSisa = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -404,19 +416,13 @@ hari ini besok dan seterusnya</p>
           }
         });
       }, { threshold: 0.1 });
-      sectionTitles.forEach(t => obsSisa.observe(t));
-      elemenPenutup.forEach(e => obsSisa.observe(e));
+      document.querySelectorAll('.section-title, .tanda, .akhir, .penutup h2').forEach(el => obsSisa.observe(el));
 
     } else {
-      // Fallback kalau browser ga support
-      document.querySelectorAll('.foto, .surat-wrap p, .section-title, .tanda, .akhir, .penutup h2').forEach(el => {
-        el.classList.add('muncul');
-      });
+      document.querySelectorAll('.foto, .lyric-line, .section-title, .tanda, .akhir, .penutup h2').forEach(el => el.classList.add('muncul'));
     }
 
-    // ==========================================
-    // 4. EFEK KETIK
-    // ==========================================
+    // --- EFEK KETIK ---
     const teksKetik = "kamu yang paling cantik dan paling aku sayang";
     const elKetik = document.getElementById('ketik');
     let i = 0;
@@ -429,7 +435,7 @@ hari ini besok dan seterusnya</p>
     }
 
     // ==========================================
-    // 5. CANVAS HATI
+    // CANVAS EFEK (HATI, CONFETTI, BINTANG KURSOR)
     // ==========================================
     const canvas = document.getElementById('fxCanvas');
     if (canvas) {
@@ -440,6 +446,8 @@ hari ini besok dan seterusnya</p>
       window.addEventListener('resize', resize);
 
       const hatiList = [];
+      const sparkles = []; // Buat efek kursor
+
       function spawnHeart() {
         hatiList.push({
           x: Math.random() * W, y: H + 20,
@@ -450,6 +458,17 @@ hari ini besok dan seterusnya</p>
         });
       }
       for (let j = 0; j < 18; j++) { spawnHeart(); hatiList[j].y = Math.random() * H; }
+
+      // Efek Kursor Bintang
+      document.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.7) { // Biar ga terlalu penuh
+          sparkles.push({
+            x: e.clientX, y: e.clientY,
+            size: 3 + Math.random() * 4,
+            life: 1, vy: -1 - Math.random() * 2
+          });
+        }
+      });
 
       function drawHeartShape(size) {
         ctx.beginPath();
@@ -463,6 +482,8 @@ hari ini besok dan seterusnya</p>
 
       function loop() {
         ctx.clearRect(0, 0, W, H);
+        
+        // Hati melayang ke atas
         if (Math.random() < 0.06 && hatiList.length < 30) spawnHeart();
         for (let j = hatiList.length - 1; j >= 0; j--) {
           const h = hatiList[j];
@@ -478,6 +499,20 @@ hari ini besok dan seterusnya</p>
           ctx.fill();
           ctx.restore();
         }
+
+        // Bintang mengikuti kursor
+        for (let j = sparkles.length - 1; j >= 0; j--) {
+          const s = sparkles[j];
+          s.y += s.vy;
+          s.life -= 0.02;
+          if (s.life <= 0) { sparkles.splice(j, 1); continue; }
+          
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 182, 201, ${s.life})`; // Warna pink
+          ctx.fill();
+        }
+
         requestAnimationFrame(loop);
       }
       loop();
